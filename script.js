@@ -12,6 +12,7 @@ const schedule = [
     { time: '18:30', activity: 'Avondeten - Vrije tijd' },
     { time: '19:45', activity: 'Avondactiviteit' },
     { time: '21:30', activity: 'Vrije tijd - Bar' },
+    { time: '22:00', activity: 'Niet meer douchen' },
     { time: '22:00', activity: 'Iedereen naar de kamers' },
     { time: '22:30', activity: 'Lichten uit - Slapen' }
 ];
@@ -22,7 +23,7 @@ function timeToMinutes(hour, minute) {
     return hour * 60 + minute;
 }
 
-// Data voorbereiden
+// Data verwerking
 schedule.forEach((item, index, array) => {
     const [hour, minute] = item.time.split(':').map(Number);
     const nextItem = array[(index + 1) % array.length];
@@ -37,7 +38,7 @@ schedule.forEach((item, index, array) => {
     });
 });
 
-// Tabel genereren
+// Tabel opbouwen
 function createTable() {
     const tbody = document.querySelector('#schedule-table tbody');
     betterSchedule.forEach((item, index) => {
@@ -58,6 +59,7 @@ function createTable() {
     });
 }
 
+// Tijdcontrole inclusief gelijke tijden en middernacht check
 function isCurrentActivity(currentMins, startMins, endMins) {
     if (startMins < endMins) {
         return currentMins >= startMins && currentMins < endMins;
@@ -68,7 +70,7 @@ function isCurrentActivity(currentMins, startMins, endMins) {
     }
 }
 
-// UI updaten
+// Scherm updates
 function updateApp() {
     const now = new Date();
     const currentMinutes = timeToMinutes(now.getHours(), now.getMinutes());
@@ -99,22 +101,22 @@ function updateApp() {
     });
 }
 
-// --- NAVIGATIE LOGICA ---
+// Navigatie tussen schermen
 function switchView(viewId) {
     document.querySelectorAll('.view').forEach(view => {
         view.classList.add('hidden');
     });
     document.getElementById(viewId).classList.remove('hidden');
-    window.scrollTo(0, 0); // Scroll terug naar boven bij wisselen scherm
+    window.scrollTo(0, 0);
 }
 
-// Knoppen koppelen aan acties
+// Event Listeners voor knoppen
 document.getElementById('btn-to-schedule').addEventListener('click', () => switchView('schedule-view'));
 document.getElementById('btn-to-game').addEventListener('click', () => switchView('game-view'));
 document.getElementById('btn-back-from-schedule').addEventListener('click', () => switchView('home-view'));
 document.getElementById('btn-back-from-game').addEventListener('click', () => switchView('home-view'));
 
-// Initialiseren
+// Start applicatie
 createTable();
 updateApp();
 setInterval(updateApp, 1000);
