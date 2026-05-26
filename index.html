@@ -58,14 +58,49 @@
                 <button class="back-link" id="btn-back-from-game">&larr; Terug naar hoofdmenu</button>
             </div>
             
-            <div class="live-panel">
-                <h2 class="section-title">Kampspel</h2>
-                <p>Er is momenteel geen actief spel gestart door de leiding.</p>
+            <h2 class="page-title">Kampspel: De Rebus Jacht</h2>
+
+            <div id="game-login-panel" class="live-panel">
+                <p>Voer de naam van je team in om deel te nemen aan het spel:</p>
+                <div style="margin-top: 10px;">
+                    <input type="text" id="input-team-name" placeholder="bv. De Turbo Tijgers" style="padding: 10px; width: 65%; border: 1px solid #000000; font-family: inherit;">
+                    <button id="btn-save-team" class="nav-button" style="padding: 10px 15px; display: inline-block; font-size: 0.9rem;">Starten</button>
+                </div>
             </div>
+
+            <div id="game-play-panel" class="live-panel hidden">
+                <p>Ingelogd als: <strong id="display-team-name">-</strong></p>
+                <hr style="border: 0; border-top: 1px solid #cccccc; margin: 15px 0;">
+                <p><strong>Rebus opgelost?</strong> Voer hieronder je antwoord in:</p>
+                <div style="margin-top: 10px; display: flex; gap: 10px;">
+                    <input type="text" id="input-rebus-answer" placeholder="Antwoord..." style="padding: 10px; flex-grow: 1; border: 1px solid #000000; font-family: inherit;">
+                    <button id="btn-submit-answer" class="nav-button" style="padding: 10px 15px; font-size: 0.9rem;">Insturen</button>
+                </div>
+                <p id="game-feedback" style="margin-top: 8px; font-weight: bold; font-size: 0.9rem;"></p>
+            </div>
+
+            <h2 class="page-title" style="margin-top: 20px;">Tussenstand</h2>
+            <table id="scoreboard-table">
+                <thead>
+                    <tr>
+                        <th>Team</th>
+                        <th style="width: 80px; text-align: center;">Punten</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
         </section>
 
     </div>
 
-    <script src="./script.js"></script>
+    <script type="module" src="./script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('ServiceWorker actief'))
+                .catch(err => console.error('ServiceWorker fout', err));
+        }
+    </script>
 </body>
 </html>
