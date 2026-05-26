@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, set, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// JOUW FIREBASE CONFIGURATIE (Nu volledig ingevuld en gekoppeld aan je Europese server!)
+// JOUW FIREBASE CONFIGURATIE (Volledig gekoppeld aan jouw project)
 const firebaseConfig = {
     apiKey: "AIzaSyAsXdb74t429pzITFezfh4s-y5qD_Jto5g",
     authDomain: "topvakantie-p5.firebaseapp.com",
@@ -17,7 +17,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// --- VANAF HIER KAN DE REST VAN DE JAVASCRIPT CODE GEPLAKT WORDEN ---
 // --- DAGPLANNING & KLOK LOGICA ---
 const schedule = [
     { time: '8:15', activity: 'Opstaan' },
@@ -131,25 +130,45 @@ document.getElementById('btn-to-game').addEventListener('click', () => switchVie
 document.getElementById('btn-back-from-schedule').addEventListener('click', () => switchView('home-view'));
 document.getElementById('btn-back-from-game').addEventListener('click', () => switchView('home-view'));
 
+
 // --- KAMPSPEL LOGICA (REALTIME DATABASE) ---
 let gekozenTeam = localStorage.getItem('kamp_teamnaam') || null;
 
+// Controleer status van aanmelden en luister live of het team nog bestaat
 function checkTeamStatus() {
     const loginPanel = document.getElementById('game-login-panel');
     const playPanel = document.getElementById('game-play-panel');
     const displayGrid = document.getElementById('display-team-name');
 
     if (gekozenTeam) {
-        loginPanel.classList.add('hidden');
-        playPanel.classList.remove('hidden');
-        displayGrid.textContent = gekozenTeam;
+        // Luister live: Bestaat dit specifieke team nog in Firebase?
+        const teamRef = ref(db, `teams/${gekozenTeam}`);
+        onValue(teamRef, (snapshot) => {
+            if (!snapshot.exists()) {
+                // Team is door leiding gewist uit de db -> Log ze direct lokaal uit!
+                localStorage.removeItem('kamp_teamnaam');
+                gekozenTeam = null;
+                
+                // Reset de panelen onmiddellijk op het scherm
+                loginPanel.classList.remove('hidden');
+                playPanel.classList.add('hidden');
+                document.getElementById('input-team-name').value = "";
+                document.getElementById('game-feedback').textContent = "";
+            } else {
+                // Team bestaat gewoon, toon het spelscherm
+                loginPanel.classList.add('hidden');
+                playPanel.classList.remove('hidden');
+                displayGrid.textContent = gekozenTeam;
+            }
+        });
     } else {
+        // Geen team ingelogd, toon het startscherm
         loginPanel.classList.remove('hidden');
         playPanel.classList.add('hidden');
     }
 }
 
-// 1. Team registreren
+// 1. Team registreren in de database
 document.getElementById('btn-save-team').addEventListener('click', async () => {
     const inputName = document.getElementById('input-team-name').value.trim();
     
@@ -175,12 +194,13 @@ document.getElementById('btn-save-team').addEventListener('click', async () => {
     checkTeamStatus();
 });
 
-// 2. Antwoord controleren via /rebus (Met toLowerCase())
+// 2. Antwoord controleren via /rebus (Met toLowerCase() en cheat-proof)
 document.getElementById('btn-submit-answer').addEventListener('click', async () => {
     const inputAnswer = document.getElementById('input-rebus-answer').value.trim().toLowerCase();
     const feedbackEl = document.getElementById('game-feedback');
     
     if (!inputAnswer) return;
+    if (!gekozenTeam) return;
 
     feedbackEl.className = ""; 
     feedbackEl.textContent = "Controleren...";
@@ -188,19 +208,28 @@ document.getElementById('btn-submit-answer').addEventListener('click', async () 
     try {
         const dbRef = ref(db);
         
-        // We zoeken in de map 'rebus' met kleine letters
+        // Check in de map 'rebus' of het antwoord bestaat
         const rebusSnapshot = await get(child(dbRef, `rebus/${inputAnswer}`));
 
         if (rebusSnapshot.exists()) {
             const puntenToekennen = rebusSnapshot.val();
 
             const teamSnapshot = await get(child(dbRef, `teams/${gekozenTeam}`));
+            
+            if (!teamSnapshot.exists()) {
+                feedbackEl.textContent = "Je team bestaat niet meer.";
+                feedbackEl.classList.add('feedback-wrong');
+                return;
+            }
+
             const teamData = teamSnapshot.val();
 
+            // Kijken of dit team deze rebus al een keer heeft opgelost
             if (teamData.opgelosteRebussen && teamData.opgelosteRebussen[inputAnswer]) {
                 feedbackEl.textContent = "Juist, maar deze rebus hebben jullie al opgelost!";
                 feedbackEl.classList.add('feedback-wrong');
             } else {
+                // Bereken en verwerk de nieuwe score
                 const nieuweScore = (teamData.score || 0) + puntenToekennen;
                 
                 const updates = {};
@@ -224,7 +253,7 @@ document.getElementById('btn-submit-answer').addEventListener('click', async () 
     }
 });
 
-// 3. Live scorebord
+// 3. Live scorebord via realtime luisteraar
 function luisterNaarScorebord() {
     const teamsRef = ref(db, 'teams');
     
@@ -239,11 +268,13 @@ function luisterNaarScorebord() {
             alleTeams.push(childSnapshot.val());
         });
 
+        // Sorteer op de hoogste score
         alleTeams.sort((a, b) => b.score - a.score);
 
         alleTeams.forEach((teamData) => {
             const row = document.createElement('tr');
             
+            // Highlight de rij als het je eigen ingelogde team is
             if (teamData.teamNaam === gekozenTeam) {
                 row.classList.add('current-activity'); 
             }
@@ -257,7 +288,7 @@ function luisterNaarScorebord() {
     });
 }
 
-// Applicatie opstarten
+// Applicatie officieel opstarten
 createTable();
 updateApp();
 setInterval(updateApp, 1000);
