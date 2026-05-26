@@ -12,14 +12,12 @@ const schedule = [
     { time: '18:30', activity: 'Avondeten - Vrije tijd' },
     { time: '19:45', activity: 'Avondactiviteit' },
     { time: '21:30', activity: 'Vrije tijd - Bar' },
-    { time: '22:00', activity: 'Niet meer douchen' },
     { time: '22:00', activity: 'Iedereen naar de kamers' },
     { time: '22:30', activity: 'Lichten uit - Slapen' }
 ];
 
 let betterSchedule = [];
 
-// Helper functie: tijd naar minuten
 function timeToMinutes(hour, minute) {
     return hour * 60 + minute;
 }
@@ -60,17 +58,12 @@ function createTable() {
     });
 }
 
-// Checkt of een tijdstip in de huidige activiteit valt
 function isCurrentActivity(currentMins, startMins, endMins) {
     if (startMins < endMins) {
-        // Normale situatie (bijv. 10:45 tot 11:05)
         return currentMins >= startMins && currentMins < endMins;
     } else if (startMins > endMins) {
-        // Logica voor activiteit die over middernacht heen gaat (bijv. 22:30 tot 08:15)
         return currentMins >= startMins || currentMins < endMins;
     } else {
-        // Logica voor twee activiteiten op EXACT hetzelfde moment (duur van 0 minuten)
-        // Deze licht nu alleen op als het op de minuut af deze tijd is
         return currentMins === startMins;
     }
 }
@@ -80,34 +73,48 @@ function updateApp() {
     const now = new Date();
     const currentMinutes = timeToMinutes(now.getHours(), now.getMinutes());
     
-    // Tijd formatteren (HH:MM:SS)
     const timeString = [now.getHours(), now.getMinutes(), now.getSeconds()]
         .map(n => String(n).padStart(2, '0'))
         .join(':');
     
-    document.querySelector('#currentTime').textContent = timeString;
+    const currentTimeEl = document.querySelector('#currentTime');
+    if (currentTimeEl) currentTimeEl.textContent = timeString;
 
-    // Activiteit zoeken en updaten
     betterSchedule.forEach((item, index) => {
         const row = document.getElementById(`row-${index}`);
         
         if (isCurrentActivity(currentMinutes, item.startMinutes, item.endMinutes)) {
-            // Update het bovenste blok
-            document.querySelector("#currentActivity").textContent = item.activity;
-            document.querySelector("#currentActivityFrom").textContent = item.startTime;
-            document.querySelector("#currentActivityTo").textContent = item.endTime;
+            const curAct = document.querySelector("#currentActivity");
+            const curActFrom = document.querySelector("#currentActivityFrom");
+            const curActTo = document.querySelector("#currentActivityTo");
             
-            // Update tabel highlight
-            row.classList.add('current-activity');
+            if (curAct) curAct.textContent = item.activity;
+            if (curActFrom) curActFrom.textContent = item.startTime;
+            if (curActTo) curActTo.textContent = item.endTime;
+            
+            if (row) row.classList.add('current-activity');
         } else {
-            row.classList.remove('current-activity');
+            if (row) row.classList.remove('current-activity');
         }
     });
 }
 
+// --- NAVIGATIE LOGICA ---
+function switchView(viewId) {
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.add('hidden');
+    });
+    document.getElementById(viewId).classList.remove('hidden');
+    window.scrollTo(0, 0); // Scroll terug naar boven bij wisselen scherm
+}
+
+// Knoppen koppelen aan acties
+document.getElementById('btn-to-schedule').addEventListener('click', () => switchView('schedule-view'));
+document.getElementById('btn-to-game').addEventListener('click', () => switchView('game-view'));
+document.getElementById('btn-back-from-schedule').addEventListener('click', () => switchView('home-view'));
+document.getElementById('btn-back-from-game').addEventListener('click', () => switchView('home-view'));
+
 // Initialiseren
 createTable();
 updateApp();
-
-// Elke seconde updaten voor de klok
 setInterval(updateApp, 1000);
