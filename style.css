@@ -1,15 +1,15 @@
 :root {
-    --bg-color: #f3f4f6; /* Zacht lichtgrijs */
+    --bg-color: #f3f4f6;
     --card-bg: #ffffff;
-    --text-main: #111827; /* Bijna zwart voor optimaal contrast */
+    --text-main: #111827;
     --text-muted: #6b7280;
     --border-color: #e5e7eb;
-    --accent-color: #2563eb; /* Strak, professioneel blauw */
+    --accent-color: #2563eb;
     --accent-bg: #eff6ff;
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
     margin: 0;
@@ -26,10 +26,107 @@ body {
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
 }
 
-/* Status Card (Bovenste blok) */
+/* Navigatie Views */
+.view {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Home Scherm CSS */
+.home-header {
+    margin-top: 20px;
+}
+
+.main-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 4px 0 0 0;
+    color: var(--text-main);
+}
+
+.menu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.menu-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease, transform 0.1s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.menu-btn:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.menu-btn:active {
+    transform: scale(0.99);
+}
+
+.menu-btn-icon {
+    font-size: 1.75rem;
+    background: var(--bg-color);
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-btn-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.menu-btn-text strong {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.menu-btn-text span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Terug Knop */
+.back-btn {
+    background: transparent;
+    border: none;
+    color: var(--accent-color);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: flex-start;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+/* Status Card */
 .status-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -79,7 +176,7 @@ body {
     margin: 0;
 }
 
-/* Tabel Sectie */
+/* Tabel */
 .schedule-section {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -117,7 +214,7 @@ tr:last-child td {
 
 .cell-time {
     color: var(--text-muted);
-    font-variant-numeric: tabular-nums; /* Zorgt dat tijden netjes onder elkaar staan */
+    font-variant-numeric: tabular-nums;
     width: 80px;
 }
 
@@ -125,7 +222,6 @@ tr:last-child td {
     font-weight: 500;
 }
 
-/* Huidige activiteit highlight in tabel */
 tr.current-activity {
     background-color: var(--accent-bg);
 }
@@ -134,14 +230,10 @@ tr.current-activity td {
     position: relative;
 }
 
-/* Subtiel blauw balkje aan de linkerkant voor de actieve rij */
 tr.current-activity .cell-time::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
+    left: 0; top: 0; bottom: 0; width: 4px;
     background-color: var(--accent-color);
 }
 
