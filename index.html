@@ -3,64 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamp Controlepaneel</title>
+    <title>Kampgids</title>
     <link rel="manifest" href="./manifest.json">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div class="app-container">
+    <div class="app-wrapper">
         
         <section id="home-view" class="view">
-            <h1 class="page-title">Kamp Navigatie</h1>
-            <nav class="menu-list">
-                <button id="btn-to-schedule" class="nav-button">1. Dagplanning openen</button>
-                <button id="btn-to-game" class="nav-button">2. Kampspel openen</button>
+            <header class="brand-header">
+                <p class="brand-sub">Zomerkamp 2026</p>
+                <h1 class="brand-title">Controlepaneel</h1>
+            </header>
+            
+            <nav class="editorial-menu">
+                <button id="btn-to-schedule" class="menu-link">
+                    <span class="menu-link-title">Dagplanning</span>
+                    <span class="menu-link-desc">Het realtime schema van vandaag</span>
+                </button>
+                <button id="btn-to-game" class="menu-link">
+                    <span class="menu-link-title">Kampspel</span>
+                    <span class="menu-link-desc">Actieve spelregels en live scores</span>
+                </button>
             </nav>
         </section>
 
         <section id="schedule-view" class="view hidden">
-            <div class="navigation-bar">
-                <button class="back-link" id="btn-back-from-schedule">&larr; Terug naar hoofdmenu</button>
-            </div>
+            <header class="view-header">
+                <button class="back-link" id="btn-back-from-schedule">← terug naar overzicht</button>
+            </header>
             
-            <div class="live-panel">
-                <div class="panel-row">
-                    <span class="panel-label">HUIDIGE TIJD:</span>
-                    <span id="currentTime" class="panel-value">00:00:00</span>
+            <div class="hero-status">
+                <div class="status-meta">
+                    <span>Huidige tijd</span>
+                    <span id="currentTime" class="clock-digital">00:00:00</span>
                 </div>
-                <div class="panel-row">
-                    <span class="panel-label">HUIDIGE ACTIVITEIT:</span>
-                    <strong id="currentActivity" class="panel-value">-</strong>
-                </div>
-                <div class="panel-row">
-                    <span class="panel-label">PERIODE:</span>
-                    <span class="panel-value"><span id="currentActivityFrom">00:00</span> tot <span id="currentActivityTo">00:00</span></span>
-                </div>
+                <h2 id="currentActivity" class="current-activity-name">Laden...</h2>
+                <p class="current-activity-time">
+                    Sessie van <span id="currentActivityFrom">00:00</span> tot <span id="currentActivityTo">00:00</span>
+                </p>
             </div>
 
-            <table id="schedule-table">
-                <thead>
-                    <tr>
-                        <th>Tijd</th>
-                        <th>Activiteit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Tijd</th>
+                            <th>Programma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
         </section>
 
         <section id="game-view" class="view hidden">
-            <div class="navigation-bar">
-                <button class="back-link" id="btn-back-from-game">&larr; Terug naar hoofdmenu</button>
-            </div>
+            <header class="view-header">
+                <button class="back-link" id="btn-back-from-game">← terug naar overzicht</button>
+            </header>
             
-            <div class="live-panel">
-                <h2 class="section-title">Kampspel</h2>
-                <p>Er is momenteel geen actief spel gestart door de leiding.</p>
+            <div class="hero-status">
+                <h2 class="current-activity-name">Het Kampspel</h2>
+                <p style="color: var(--text-muted); line-height: 1.5; margin-top: 12px;">
+                    Er is op dit moment geen kampspel actief. Zodra de leiding het spel start, verschijnen hier de live opdrachten.
+                </p>
             </div>
         </section>
 
