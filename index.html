@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagschema</title>
+    <title>Kamp App</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,40 +12,82 @@
 </head>
 <body>
     <main class="app-container">
-        <section class="status-card">
-            <div class="time-header">
-                <span class="label">Huidige tijd</span>
-                <span id="currentTime" class="time-value">00:00:00</span>
-            </div>
+        
+        <section id="home-view" class="view">
+            <header class="home-header">
+                <span class="label">Kamp platform</span>
+                <h1 class="main-title">Algemeen Menu</h1>
+            </header>
             
-            <div class="activity-details">
-                <h1 id="currentActivity" class="activity-title">Laden...</h1>
-                <p class="activity-window">
-                    <span id="currentActivityFrom">00:00</span> &mdash; <span id="currentActivityTo">00:00</span>
+            <div class="menu-grid">
+                <button id="btn-to-schedule" class="menu-btn">
+                    <span class="menu-btn-icon">📅</span>
+                    <div class="menu-btn-text">
+                        <strong>Dagplanning</strong>
+                        <span>Bekijk het realtime schema</span>
+                    </div>
+                </button>
+                
+                <button id="btn-to-game" class="menu-btn">
+                    <span class="menu-btn-icon">🎮</span>
+                    <div class="menu-btn-text">
+                        <strong>Kamp Game</strong>
+                        <span>Start het actieve kampspel</span>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <section id="schedule-view" class="view hidden">
+            <button class="back-btn" id="btn-back-from-schedule">&larr; Terug naar menu</button>
+            
+            <div class="status-card">
+                <div class="time-header">
+                    <span class="label">Huidige tijd</span>
+                    <span id="currentTime" class="time-value">00:00:00</span>
+                </div>
+                
+                <div class="activity-details">
+                    <h1 id="currentActivity" class="activity-title">Laden...</h1>
+                    <p class="activity-window">
+                        <span id="currentActivityFrom">00:00</span> &mdash; <span id="currentActivityTo">00:00</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="schedule-section">
+                <table id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Tijd</th>
+                            <th>Activiteit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="game-view" class="view hidden">
+            <button class="back-btn" id="btn-back-from-game">&larr; Terug naar menu</button>
+            
+            <div class="status-card">
+                <h1 class="activity-title">Kamp Game</h1>
+                <p class="activity-window" style="margin-top: 8px;">
+                    Het grote kampspel wordt hier geladen zodra de leiding het start.
                 </p>
             </div>
         </section>
 
-        <section class="schedule-section">
-            <table id="schedule-table">
-                <thead>
-                    <tr>
-                        <th>Tijd</th>
-                        <th>Activiteit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
-        </section>
     </main>
 
     <script src="./script.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js')
-                .then(registration => console.log('ServiceWorker geregistreerd:', registration.scope))
-                .catch(error => console.error('ServiceWorker registratie mislukt:', error));
+                .then(registration => console.log('ServiceWorker geregistreerd'))
+                .catch(error => console.error('ServiceWorker defect', error));
         }
     </script>
 </body>
