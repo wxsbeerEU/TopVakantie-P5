@@ -4,7 +4,7 @@
     --text-muted: #555555;
     --border-dark: #000000;
     --border-light: #cccccc;
-    --highlight-bg: #e5e7eb; /* Neutraal grijs voor actieve selectie */
+    --highlight-bg: #e5e7eb; /* Strak grijs voor actieve rijen */
 }
 
 body {
@@ -22,7 +22,7 @@ body {
     max-width: 600px;
 }
 
-/* Views & Navigatie */
+/* Views & Structuur */
 .view {
     display: flex;
     flex-direction: column;
@@ -48,7 +48,7 @@ body {
     gap: 10px;
 }
 
-/* Kaal gemaakte knoppen zonder moderne franjes */
+/* Administratieve, strakke knoppen */
 .nav-button {
     background: var(--bg-main);
     color: var(--text-main);
@@ -75,7 +75,7 @@ body {
     text-decoration: underline;
 }
 
-/* Live Informatie Blok */
+/* Panels */
 .live-panel {
     border: 1px solid var(--border-dark);
     padding: 15px;
@@ -103,7 +103,7 @@ body {
     font-size: 1rem;
 }
 
-/* Data Tabel */
+/* Tabellen (Zowel planning als scorebord) */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -130,7 +130,7 @@ th {
     font-weight: 700;
 }
 
-/* De actieve rij markering: Geen zacht blauw, gewoon een dikke zwarte rand / grijze opvulling */
+/* Highlight voor actieve rij planning & eigen team in stand */
 tr.current-activity {
     background-color: var(--highlight-bg);
     font-weight: 700;
@@ -139,4 +139,13 @@ tr.current-activity {
 tr.current-activity td {
     border-top: 2px solid var(--border-dark);
     border-bottom: 2px solid var(--border-dark);
+}
+
+/* Feedback kleuren voor de antwoorden */
+.feedback-correct {
+    color: #2e7d32; /* Hard groen */
+}
+
+.feedback-wrong {
+    color: #c62828; /* Hard rood */
 }
