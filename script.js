@@ -2,21 +2,22 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, set, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// JOUW FIREBASE CONFIGURATIE (Vul hier nog je eigen API-key en ID's in)
+// JOUW FIREBASE CONFIGURATIE (Nu volledig ingevuld en gekoppeld aan je Europese server!)
 const firebaseConfig = {
-    apiKey: "JOUW_EIGEN_API_KEY_HIER_PLAKKEN",
+    apiKey: "AIzaSyAsXdb74t429pzITFezfh4s-y5qD_Jto5g",
     authDomain: "topvakantie-p5.firebaseapp.com",
     databaseURL: "https://topvakantie-p5-default-rtdb.europe-west1.firebasedatabase.app/",
     projectId: "topvakantie-p5",
-    storageBucket: "topvakantie-p5.appspot.com",
-    messagingSenderId: "JOUW_SENDER_ID_HIER_PLAKKEN",
-    appId: "JOUW_APP_ID_HIER_PLAKKEN"
+    storageBucket: "topvakantie-p5.firebasestorage.app",
+    messagingSenderId: "1011108083968",
+    appId: "1:1011108083968:web:4d6955b2c7879bb3809be5"
 };
 
 // Initialiseer Firebase & Realtime Database
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// --- VANAF HIER KAN DE REST VAN DE JAVASCRIPT CODE GEPLAKT WORDEN ---
 // --- DAGPLANNING & KLOK LOGICA ---
 const schedule = [
     { time: '8:15', activity: 'Opstaan' },
