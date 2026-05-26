@@ -1,244 +1,142 @@
 :root {
-    --bg-color: #f3f4f6;
-    --card-bg: #ffffff;
-    --text-main: #111827;
-    --text-muted: #6b7280;
-    --border-color: #e5e7eb;
-    --accent-color: #2563eb;
-    --accent-bg: #eff6ff;
+    --bg-main: #ffffff;
+    --text-main: #000000;
+    --text-muted: #555555;
+    --border-dark: #000000;
+    --border-light: #cccccc;
+    --highlight-bg: #e5e7eb; /* Neutraal grijs voor actieve selectie */
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: var(--bg-color);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-main);
     color: var(--text-main);
     margin: 0;
-    padding: 24px 16px;
+    padding: 20px;
     display: flex;
     justify-content: center;
-    min-height: 100vh;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
 }
 
 .app-container {
     width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
+    max-width: 600px;
 }
 
-/* Navigatie Views */
+/* Views & Navigatie */
 .view {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    width: 100%;
+    gap: 20px;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* Home Scherm CSS */
-.home-header {
-    margin-top: 20px;
-}
-
-.main-title {
-    font-size: 1.75rem;
+.page-title {
+    font-size: 1.5rem;
     font-weight: 700;
-    margin: 4px 0 0 0;
-    color: var(--text-main);
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+    border-bottom: 2px solid var(--border-dark);
+    padding-bottom: 8px;
 }
 
-.menu-grid {
+.menu-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
 }
 
-.menu-btn {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    cursor: pointer;
+/* Kaal gemaakte knoppen zonder moderne franjes */
+.nav-button {
+    background: var(--bg-main);
+    color: var(--text-main);
+    border: 1px solid var(--border-dark);
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 700;
     text-align: left;
-    transition: background 0.15s ease, transform 0.1s ease;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.menu-btn:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
-}
-
-.menu-btn:active {
-    transform: scale(0.99);
-}
-
-.menu-btn-icon {
-    font-size: 1.75rem;
-    background: var(--bg-color);
-    padding: 10px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.menu-btn-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.menu-btn-text strong {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-.menu-btn-text span {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-/* Terug Knop */
-.back-btn {
-    background: transparent;
-    border: none;
-    color: var(--accent-color);
-    font-size: 0.95rem;
-    font-weight: 600;
     cursor: pointer;
-    align-self: flex-start;
-    padding: 4px 0;
-    display: flex;
-    align-items: center;
 }
 
-.back-btn:hover {
+.nav-button:hover {
+    background: #f0f0f0;
+}
+
+.back-link {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
     text-decoration: underline;
 }
 
-/* Status Card */
-.status-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+/* Live Informatie Blok */
+.live-panel {
+    border: 1px solid var(--border-dark);
+    padding: 15px;
+    background: #fafafa;
 }
 
-.time-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.time-value {
-    font-family: monospace;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--accent-color);
-}
-
-.activity-details {
-    text-align: left;
-}
-
-.activity-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 8px 0;
-    color: var(--text-main);
-}
-
-.activity-window {
-    font-size: 1rem;
-    color: var(--text-muted);
-    margin: 0;
-}
-
-/* Tabel */
-.schedule-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-th {
-    background-color: #f9fafb;
-    padding: 12px 16px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--border-color);
-}
-
-td {
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color);
+.panel-row {
+    margin-bottom: 8px;
     font-size: 0.95rem;
 }
 
-tr:last-child td {
-    border-bottom: none;
+.panel-row:last-child {
+    margin-bottom: 0;
+}
+
+.panel-label {
+    font-weight: 700;
+    color: var(--text-muted);
+    display: inline-block;
+    width: 160px;
+}
+
+.panel-value {
+    font-family: monospace;
+    font-size: 1rem;
+}
+
+/* Data Tabel */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid var(--border-dark);
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+th {
+    background: #f0f0f0;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
 }
 
 .cell-time {
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-    width: 80px;
+    font-family: monospace;
+    width: 70px;
+    font-weight: 700;
 }
 
-.cell-activity {
-    font-weight: 500;
-}
-
+/* De actieve rij markering: Geen zacht blauw, gewoon een dikke zwarte rand / grijze opvulling */
 tr.current-activity {
-    background-color: var(--accent-bg);
+    background-color: var(--highlight-bg);
+    font-weight: 700;
 }
 
 tr.current-activity td {
-    position: relative;
-}
-
-tr.current-activity .cell-time::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0; width: 4px;
-    background-color: var(--accent-color);
-}
-
-tr.current-activity .cell-time,
-tr.current-activity .cell-activity {
-    color: var(--accent-color);
-    font-weight: 600;
+    border-top: 2px solid var(--border-dark);
+    border-bottom: 2px solid var(--border-dark);
 }
