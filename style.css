@@ -1,215 +1,142 @@
 :root {
-    --bg-color: #f8f6f2;       /* Warm linnen / off-white */
-    --card-bg: #ffffff;        /* Puur wit voor contrast */
-    --text-main: #1a2221;      /* Diepe inkt-kleur */
-    --text-muted: #687371;     /* Gedempt grijsgroen */
-    --accent: #2c4239;         /* Elegant diep bosgroen */
-    --accent-soft: #ebf0ee;    /* Heel zacht groen voor de actieve rij */
-    --border-color: #e3dfd5;   /* Subtiele, warme scheidingslijn */
+    --bg-main: #ffffff;
+    --text-main: #000000;
+    --text-muted: #555555;
+    --border-dark: #000000;
+    --border-light: #cccccc;
+    --highlight-bg: #e5e7eb; /* Neutraal grijs voor actieve selectie */
 }
 
 body {
-    font-family: 'Instrument Sans', -apple-system, sans-serif;
-    background-color: var(--bg-color);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-main);
     color: var(--text-main);
     margin: 0;
-    padding: 40px 20px;
+    padding: 20px;
     display: flex;
     justify-content: center;
-    min-height: 100vh;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
 }
 
-.app-wrapper {
+.app-container {
     width: 100%;
-    max-width: 540px;
+    max-width: 600px;
 }
 
+/* Views & Navigatie */
 .view {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    gap: 20px;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* Prachtige Typografie voor Hoofden */
-.brand-header {
-    margin-bottom: 40px;
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+    border-bottom: 2px solid var(--border-dark);
+    padding-bottom: 8px;
 }
 
-.brand-sub {
-    font-family: 'Newsreader', serif;
-    font-style: italic;
-    font-size: 1.2rem;
-    color: var(--text-muted);
-    margin: 0 0 6px 0;
-}
-
-.brand-title {
-    font-family: 'Newsreader', serif;
-    font-size: 2.75rem;
-    font-weight: 400;
-    margin: 0;
-    letter-spacing: -0.02em;
-}
-
-/* Editorial Menu Knoppen */
-.editorial-menu {
+.menu-list {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--border-color);
+    gap: 10px;
 }
 
-.menu-link {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border-color);
-    padding: 24px 0;
+/* Kaal gemaakte knoppen zonder moderne franjes */
+.nav-button {
+    background: var(--bg-main);
+    color: var(--text-main);
+    border: 1px solid var(--border-dark);
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 700;
     text-align: left;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-    transition: padding-left 0.2s ease;
 }
 
-.menu-link:hover {
-    padding-left: 8px;
-}
-
-.menu-link-title {
-    font-family: 'Newsreader', serif;
-    font-size: 1.5rem;
-    color: var(--text-main);
-}
-
-.menu-link-desc {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-}
-
-/* Terug Knop */
-.view-header {
-    margin-bottom: 24px;
+.nav-button:hover {
+    background: #f0f0f0;
 }
 
 .back-link {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--text-main);
     font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
     padding: 0;
-    transition: color 0.15s;
+    text-decoration: underline;
 }
 
-.back-link:hover {
-    color: var(--accent);
+/* Live Informatie Blok */
+.live-panel {
+    border: 1px solid var(--border-dark);
+    padding: 15px;
+    background: #fafafa;
 }
 
-/* Hero Status Blok (Bovenste kaart) */
-.hero-status {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 32px 24px;
-    margin-bottom: 32px;
+.panel-row {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
 }
 
-.status-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+.panel-row:last-child {
+    margin-bottom: 0;
+}
+
+.panel-label {
+    font-weight: 700;
     color: var(--text-muted);
-    margin-bottom: 16px;
+    display: inline-block;
+    width: 160px;
 }
 
-.clock-digital {
+.panel-value {
     font-family: monospace;
     font-size: 1rem;
-    color: var(--accent);
-    font-weight: 600;
 }
 
-.current-activity-name {
-    font-family: 'Newsreader', serif;
-    font-size: 2rem;
-    font-weight: 400;
-    margin: 0 0 8px 0;
-    line-height: 1.2;
-}
-
-.current-activity-time {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    margin: 0;
-}
-
-/* Elegant handgemaakte Tabel */
-.table-wrapper {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    overflow: hidden;
-}
-
+/* Data Tabel */
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
 }
 
-th {
-    background: #fdfdfc;
-    border-bottom: 1px solid var(--border-color);
-    padding: 14px 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
+th, td {
+    border: 1px solid var(--border-dark);
+    padding: 10px 12px;
     text-align: left;
-}
-
-td {
-    padding: 16px 20px;
-    border-bottom: 1px solid #f3f0e8;
     font-size: 0.95rem;
 }
 
-tr:last-child td {
-    border-bottom: none;
+th {
+    background: #f0f0f0;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
 }
 
 .cell-time {
     font-family: monospace;
-    color: var(--text-muted);
-    width: 75px;
-    font-weight: 500;
+    width: 70px;
+    font-weight: 700;
 }
 
-.cell-activity {
-    color: var(--text-main);
-}
-
-/* De Actieve Rij: Geen schreeuwerige effecten, gewoon elegant gedempt groen */
+/* De actieve rij markering: Geen zacht blauw, gewoon een dikke zwarte rand / grijze opvulling */
 tr.current-activity {
-    background-color: var(--accent-soft);
+    background-color: var(--highlight-bg);
+    font-weight: 700;
 }
 
-tr.current-activity .cell-time {
-    color: var(--accent);
-    font-weight: 600;
-}
-
-tr.current-activity .cell-activity {
-    color: var(--accent);
-    font-weight: 600;
+tr.current-activity td {
+    border-top: 2px solid var(--border-dark);
+    border-bottom: 2px solid var(--border-dark);
 }
