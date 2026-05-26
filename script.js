@@ -59,6 +59,7 @@ function createTable() {
     });
 }
 
+// Tijdcontrole inclusief gelijke tijden en middernacht check
 function isCurrentActivity(currentMins, startMins, endMins) {
     if (startMins < endMins) {
         return currentMins >= startMins && currentMins < endMins;
@@ -100,7 +101,7 @@ function updateApp() {
     });
 }
 
-// Navigatie
+// Navigatie tussen schermen
 function switchView(viewId) {
     document.querySelectorAll('.view').forEach(view => {
         view.classList.add('hidden');
@@ -109,12 +110,13 @@ function switchView(viewId) {
     window.scrollTo(0, 0);
 }
 
+// Event Listeners voor knoppen
 document.getElementById('btn-to-schedule').addEventListener('click', () => switchView('schedule-view'));
 document.getElementById('btn-to-game').addEventListener('click', () => switchView('game-view'));
 document.getElementById('btn-back-from-schedule').addEventListener('click', () => switchView('home-view'));
 document.getElementById('btn-back-from-game').addEventListener('click', () => switchView('home-view'));
 
-// Start
+// Start applicatie
 createTable();
 updateApp();
 setInterval(updateApp, 1000);
