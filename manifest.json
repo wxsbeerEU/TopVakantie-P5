@@ -1,0 +1,18 @@
+{
+    "name": "Dagplanning  Italië",
+    "short_name": "Raccoon Day",
+    "description": "Topvakantie dagplanning Italië",
+    "scope": "./",
+    "start_url": "./",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "display": "fullscreen",
+    "display_override": ["standalone"],
+    "icons": [
+        {
+            "src": "./wasbeerlogo.jpg",
+            "type": "image/jpg",
+            "sizes": "700x700"
+        }   
+    ]
+}
