@@ -60,13 +60,18 @@ function createTable() {
     });
 }
 
-// Checkt of een tijdstip in de huidige activiteit valt (inclusief middernacht check)
+// Checkt of een tijdstip in de huidige activiteit valt
 function isCurrentActivity(currentMins, startMins, endMins) {
     if (startMins < endMins) {
+        // Normale situatie (bijv. 10:45 tot 11:05)
         return currentMins >= startMins && currentMins < endMins;
-    } else {
+    } else if (startMins > endMins) {
         // Logica voor activiteit die over middernacht heen gaat (bijv. 22:30 tot 08:15)
         return currentMins >= startMins || currentMins < endMins;
+    } else {
+        // Logica voor twee activiteiten op EXACT hetzelfde moment (duur van 0 minuten)
+        // Deze licht nu alleen op als het op de minuut af deze tijd is
+        return currentMins === startMins;
     }
 }
 
