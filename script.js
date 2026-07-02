@@ -104,8 +104,7 @@ function updateApp() {
         
         if (!activeFound && isCurrentActivity(currentMinutes, item.startMinutes, item.endMinutes)) {
             
-            // Controleer of het volgende item op exact dezelfde minuut start (bijv. de dubbele 22:00)
-            // Zo ja, sla deze over zodat de laatste van die minuut oplicht.
+            // Fix voor de dubbele 22:00 -> geef prioriteit aan het laatste item op dat tijdstip
             const nextItem = betterSchedule[index + 1];
             if (nextItem && nextItem.startMinutes === item.startMinutes) {
                 if (row) row.classList.remove('current-activity');
