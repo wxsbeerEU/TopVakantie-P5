@@ -1,22 +1,3 @@
-// 1. Firebase SDK Realtime Database modules laden via CDN
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-// JOUW FIREBASE CONFIGURATIE (Volledig gekoppeld aan jouw project)
-const firebaseConfig = {
-    apiKey: "AIzaSyAsXdb74t429pzITFezfh4s-y5qD_Jto5g",
-    authDomain: "topvakantie-p5.firebaseapp.com",
-    databaseURL: "https://topvakantie-p5-default-rtdb.europe-west1.firebasedatabase.app/",
-    projectId: "topvakantie-p5",
-    storageBucket: "topvakantie-p5.firebasestorage.app",
-    messagingSenderId: "1011108083968",
-    appId: "1:1011108083968:web:4d6955b2c7879bb3809be5"
-};
-
-// Initialiseer Firebase & Realtime Database
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
 // --- DAGPLANNING & KLOK LOGICA ---
 const schedule = [
     { time: '8:15', activity: 'Opstaan' },
@@ -43,22 +24,44 @@ function timeToMinutes(hour, minute) {
     return hour * 60 + minute;
 }
 
+// Bouw de planning om met correcte start- en eindtijden
 schedule.forEach((item, index, array) => {
     const [hour, minute] = item.time.split(':').map(Number);
-    const nextItem = array[(index + 1) % array.length];
-    const [nextHour, nextMinute] = nextItem.time.split(':').map(Number);
+    const startMins = timeToMinutes(hour, minute);
+    let endMins = startMins;
+
+    // Zoek naar de eerstvolgende activiteit die op een LATER tijdstip begint
+    // Dit lost het probleem op van dubbele tijden (zoals 22:00)
+    for (let i = index + 1; i < array.length; i++) {
+        const [nextHour, nextMinute] = array[i].time.split(':').map(Number);
+        const nextMins = timeToMinutes(nextHour, nextMinute);
+        if (nextMins > startMins) {
+            endMins = nextMins;
+            break;
+        }
+    }
+
+    // Als er geen latere activiteit is gevonden, is dit de laatste van de dag (loopt tot 23:59 of tot de volgende ochtend)
+    if (endMins === startMins) {
+        // We laten de laatste activiteit lopen tot het einde van de dag (23:59 -> 1439 minuten)
+        // Of tot de volgende ochtend (8:15). We kiezen hier voor de overbrugging naar de volgende dag:
+        const [firstHour, firstMinute] = array[0].time.split(':').map(Number);
+        endMins = timeToMinutes(firstHour, firstMinute); // Loopt door tot 8:15 de volgende dag
+    }
 
     betterSchedule.push({
         activity: item.activity,
         startTime: item.time,
-        endTime: nextItem.time,
-        startMinutes: timeToMinutes(hour, minute),
-        endMinutes: timeToMinutes(nextHour, nextMinute)
+        startMinutes: startMins,
+        endMinutes: endMins
     });
 });
 
 function createTable() {
     const tbody = document.querySelector('#schedule-table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = ""; // Handig bij eventuele herladen
+
     betterSchedule.forEach((item, index) => {
         const row = document.createElement('tr');
         row.id = `row-${index}`;
@@ -78,13 +81,15 @@ function createTable() {
 }
 
 function isCurrentActivity(currentMins, startMins, endMins) {
+    // Normale situatie op dezelfde dag (bijv. 8:15 tot 8:30)
     if (startMins < endMins) {
         return currentMins >= startMins && currentMins < endMins;
-    } else if (startMins > endMins) {
+    } 
+    // Situatie die over middernacht heen gaat (bijv. 22:30 tot 8:15)
+    else if (startMins > endMins) {
         return currentMins >= startMins || currentMins < endMins;
-    } else {
-        return currentMins === startMins;
     }
+    return false;
 }
 
 function updateApp() {
@@ -98,19 +103,48 @@ function updateApp() {
     const currentTimeEl = document.querySelector('#currentTime');
     if (currentTimeEl) currentTimeEl.textContent = timeString;
 
+    let activeFound = false;
+
     betterSchedule.forEach((item, index) => {
         const row = document.getElementById(`row-${index}`);
         
-        if (isCurrentActivity(currentMinutes, item.startMinutes, item.endMinutes)) {
+        // Er mag er maar eentje tegelijk oplichten. Als er al een match is (bijv. bij gelijke tijden), 
+        // krijgt de laatste activiteit op dat tijdstip de prioriteit.
+        if (!activeFound && isCurrentActivity(currentMinutes, item.startMinutes, item.endMinutes)) {
+            
+            // Extra check voor gelijke starttijden (zoals 22:00): we lichten de activiteit op die
+            // het verst in de lijst staat óf we controleren of er een exacte match is.
+            // Om te zorgen dat er maar ÉÉN oplicht, controleren we of de volgende in de lijst ook op exact dezelfde tijd start.
+            // Zo ja, dan skippen we deze en lichten we de volgende (of laatste) van die minuut op.
+            const nextItem = betterSchedule[index + 1];
+            if (nextItem && nextItem.startMinutes === item.startMinutes) {
+                if (row) row.classList.remove('current-activity');
+                return; 
+            }
+
             const curAct = document.querySelector("#currentActivity");
             const curActFrom = document.querySelector("#currentActivityFrom");
             const curActTo = document.querySelector("#currentActivityTo");
             
             if (curAct) curAct.textContent = item.activity;
+            
+            // Bepaal de mooie weergave van de eindtijd
+            let displayEndTime = item.startTime;
+            for (let i = index + 1; i < betterSchedule.length; i++) {
+                if (betterSchedule[i].startMinutes > item.startMinutes) {
+                    displayEndTime = betterSchedule[i].startTime;
+                    break;
+                }
+            }
+            if (displayEndTime === item.startTime && index === betterSchedule.length - 1) {
+                displayEndTime = schedule[0].time; // Terug naar de ochtend
+            }
+
             if (curActFrom) curActFrom.textContent = item.startTime;
-            if (curActTo) curActTo.textContent = item.endTime;
+            if (curActTo) curActTo.textContent = displayEndTime;
             
             if (row) row.classList.add('current-activity');
+            activeFound = true; // Zorgt dat er geen andere rijen meer worden geactiveerd
         } else {
             if (row) row.classList.remove('current-activity');
         }
@@ -121,176 +155,18 @@ function switchView(viewId) {
     document.querySelectorAll('.view').forEach(view => {
         view.classList.add('hidden');
     });
-    document.getElementById(viewId).classList.remove('hidden');
+    const targetView = document.getElementById(viewId);
+    if (targetView) targetView.classList.remove('hidden');
     window.scrollTo(0, 0);
 }
 
-document.getElementById('btn-to-schedule').addEventListener('click', () => switchView('schedule-view'));
-document.getElementById('btn-to-game').addEventListener('click', () => switchView('game-view'));
-document.getElementById('btn-back-from-schedule').addEventListener('click', () => switchView('home-view'));
-document.getElementById('btn-back-from-game').addEventListener('click', () => switchView('home-view'));
-
-
-// --- KAMPSPEL LOGICA (REALTIME DATABASE) ---
-let gekozenTeam = localStorage.getItem('kamp_teamnaam') || null;
-
-// Controleer status van aanmelden en luister live of het team nog bestaat
-function checkTeamStatus() {
-    const loginPanel = document.getElementById('game-login-panel');
-    const playPanel = document.getElementById('game-play-panel');
-    const displayGrid = document.getElementById('display-team-name');
-
-    if (gekozenTeam) {
-        // Luister live: Bestaat dit specifieke team nog in Firebase?
-        const teamRef = ref(db, `teams/${gekozenTeam}`);
-        onValue(teamRef, (snapshot) => {
-            if (!snapshot.exists()) {
-                // Team is door leiding gewist uit de db -> Log ze direct lokaal uit!
-                localStorage.removeItem('kamp_teamnaam');
-                gekozenTeam = null;
-                
-                // Reset de panelen onmiddellijk op het scherm
-                loginPanel.classList.remove('hidden');
-                playPanel.classList.add('hidden');
-                document.getElementById('input-team-name').value = "";
-                document.getElementById('game-feedback').textContent = "";
-            } else {
-                // Team bestaat gewoon, toon het spelscherm
-                loginPanel.classList.add('hidden');
-                playPanel.classList.remove('hidden');
-                displayGrid.textContent = gekozenTeam;
-            }
-        });
-    } else {
-        // Geen team ingelogd, toon het startscherm
-        loginPanel.classList.remove('hidden');
-        playPanel.classList.add('hidden');
-    }
-}
-
-// 1. Team registreren in de database
-document.getElementById('btn-save-team').addEventListener('click', async () => {
-    const inputName = document.getElementById('input-team-name').value.trim();
-    
-    if (inputName.length < 2) {
-        alert("Vul een geldige teamnaam in van minstens 2 letters.");
-        return;
-    }
-
-    gekozenTeam = inputName;
-    localStorage.setItem('kamp_teamnaam', gekozenTeam);
-
-    const dbRef = ref(db);
-    const snapshot = await get(child(dbRef, `teams/${gekozenTeam}`));
-    
-    if (!snapshot.exists()) {
-        await set(ref(db, `teams/${gekozenTeam}`), {
-            teamNaam: gekozenTeam,
-            score: 0,
-            opgelosteRebussen: { "start_dummy": true }
-        });
-    }
-
-    checkTeamStatus();
-});
-
-// 2. Antwoord controleren via /rebus (Met toLowerCase() en cheat-proof)
-document.getElementById('btn-submit-answer').addEventListener('click', async () => {
-    const inputAnswer = document.getElementById('input-rebus-answer').value.trim().toLowerCase();
-    const feedbackEl = document.getElementById('game-feedback');
-    
-    if (!inputAnswer) return;
-    if (!gekozenTeam) return;
-
-    feedbackEl.className = ""; 
-    feedbackEl.textContent = "Controleren...";
-
-    try {
-        const dbRef = ref(db);
-        
-        // Check in de map 'rebus' of het antwoord bestaat
-        const rebusSnapshot = await get(child(dbRef, `rebus/${inputAnswer}`));
-
-        if (rebusSnapshot.exists()) {
-            const puntenToekennen = rebusSnapshot.val();
-
-            const teamSnapshot = await get(child(dbRef, `teams/${gekozenTeam}`));
-            
-            if (!teamSnapshot.exists()) {
-                feedbackEl.textContent = "Je team bestaat niet meer.";
-                feedbackEl.classList.add('feedback-wrong');
-                return;
-            }
-
-            const teamData = teamSnapshot.val();
-
-            // Kijken of dit team deze rebus al een keer heeft opgelost
-            if (teamData.opgelosteRebussen && teamData.opgelosteRebussen[inputAnswer]) {
-                feedbackEl.textContent = "Juist, maar deze rebus hebben jullie al opgelost!";
-                feedbackEl.classList.add('feedback-wrong');
-            } else {
-                // Bereken en verwerk de nieuwe score
-                const nieuweScore = (teamData.score || 0) + puntenToekennen;
-                
-                const updates = {};
-                updates[`/teams/${gekozenTeam}/score`] = nieuweScore;
-                updates[`/teams/${gekozenTeam}/opgelosteRebussen/${inputAnswer}`] = true;
-
-                await update(ref(db), updates);
-
-                feedbackEl.textContent = `GEWELDIG! +${puntenToekennen} punten!`;
-                feedbackEl.classList.add('feedback-correct');
-                document.getElementById('input-rebus-answer').value = ""; 
-            }
-        } else {
-            feedbackEl.textContent = "Helaas, dat antwoord is niet juist.";
-            feedbackEl.classList.add('feedback-wrong');
-        }
-    } catch (error) {
-        console.error(error);
-        feedbackEl.textContent = "Verbindingsfout. Probeer het opnieuw.";
-        feedbackEl.classList.add('feedback-wrong');
-    }
-});
-
-// 3. Live scorebord via realtime luisteraar
-function luisterNaarScorebord() {
-    const teamsRef = ref(db, 'teams');
-    
-    onValue(teamsRef, (snapshot) => {
-        const tbody = document.querySelector('#scoreboard-table tbody');
-        tbody.innerHTML = ""; 
-
-        if (!snapshot.exists()) return;
-
-        const alleTeams = [];
-        snapshot.forEach((childSnapshot) => {
-            alleTeams.push(childSnapshot.val());
-        });
-
-        // Sorteer op de hoogste score
-        alleTeams.sort((a, b) => b.score - a.score);
-
-        alleTeams.forEach((teamData) => {
-            const row = document.createElement('tr');
-            
-            // Highlight de rij als het je eigen ingelogde team is
-            if (teamData.teamNaam === gekozenTeam) {
-                row.classList.add('current-activity'); 
-            }
-
-            row.innerHTML = `
-                <td>${teamData.teamNaam}</td>
-                <td style="text-align: center; font-family: monospace; font-weight: 700;">${teamData.score}</td>
-            `;
-            tbody.appendChild(row);
-        });
-    });
-}
+// Navigatie knoppen
+document.getElementById('btn-to-schedule')?.addEventListener('click', () => switchView('schedule-view'));
+document.getElementById('btn-to-game')?.addEventListener('click', () => switchView('game-view'));
+document.getElementById('btn-back-from-schedule')?.addEventListener('click', () => switchView('home-view'));
+document.getElementById('btn-back-from-game')?.addEventListener('click', () => switchView('home-view'));
 
 // Applicatie officieel opstarten
 createTable();
 updateApp();
 setInterval(updateApp, 1000);
-checkTeamStatus();
-luisterNaarScorebord();
