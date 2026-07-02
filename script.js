@@ -31,7 +31,6 @@ schedule.forEach((item, index, array) => {
     let endMins = startMins;
 
     // Zoek naar de eerstvolgende activiteit die op een LATER tijdstip begint
-    // Dit lost het probleem op van dubbele tijden (zoals 22:00)
     for (let i = index + 1; i < array.length; i++) {
         const [nextHour, nextMinute] = array[i].time.split(':').map(Number);
         const nextMins = timeToMinutes(nextHour, nextMinute);
@@ -41,12 +40,10 @@ schedule.forEach((item, index, array) => {
         }
     }
 
-    // Als er geen latere activiteit is gevonden, is dit de laatste van de dag (loopt tot 23:59 of tot de volgende ochtend)
+    // Als er geen latere activiteit is gevonden, koppelen we deze aan de start van de volgende ochtend
     if (endMins === startMins) {
-        // We laten de laatste activiteit lopen tot het einde van de dag (23:59 -> 1439 minuten)
-        // Of tot de volgende ochtend (8:15). We kiezen hier voor de overbrugging naar de volgende dag:
         const [firstHour, firstMinute] = array[0].time.split(':').map(Number);
-        endMins = timeToMinutes(firstHour, firstMinute); // Loopt door tot 8:15 de volgende dag
+        endMins = timeToMinutes(firstHour, firstMinute); 
     }
 
     betterSchedule.push({
@@ -60,7 +57,7 @@ schedule.forEach((item, index, array) => {
 function createTable() {
     const tbody = document.querySelector('#schedule-table tbody');
     if (!tbody) return;
-    tbody.innerHTML = ""; // Handig bij eventuele herladen
+    tbody.innerHTML = ""; 
 
     betterSchedule.forEach((item, index) => {
         const row = document.createElement('tr');
@@ -81,12 +78,9 @@ function createTable() {
 }
 
 function isCurrentActivity(currentMins, startMins, endMins) {
-    // Normale situatie op dezelfde dag (bijv. 8:15 tot 8:30)
     if (startMins < endMins) {
         return currentMins >= startMins && currentMins < endMins;
-    } 
-    // Situatie die over middernacht heen gaat (bijv. 22:30 tot 8:15)
-    else if (startMins > endMins) {
+    } else if (startMins > endMins) {
         return currentMins >= startMins || currentMins < endMins;
     }
     return false;
@@ -108,14 +102,10 @@ function updateApp() {
     betterSchedule.forEach((item, index) => {
         const row = document.getElementById(`row-${index}`);
         
-        // Er mag er maar eentje tegelijk oplichten. Als er al een match is (bijv. bij gelijke tijden), 
-        // krijgt de laatste activiteit op dat tijdstip de prioriteit.
         if (!activeFound && isCurrentActivity(currentMinutes, item.startMinutes, item.endMinutes)) {
             
-            // Extra check voor gelijke starttijden (zoals 22:00): we lichten de activiteit op die
-            // het verst in de lijst staat óf we controleren of er een exacte match is.
-            // Om te zorgen dat er maar ÉÉN oplicht, controleren we of de volgende in de lijst ook op exact dezelfde tijd start.
-            // Zo ja, dan skippen we deze en lichten we de volgende (of laatste) van die minuut op.
+            // Controleer of het volgende item op exact dezelfde minuut start (bijv. de dubbele 22:00)
+            // Zo ja, sla deze over zodat de laatste van die minuut oplicht.
             const nextItem = betterSchedule[index + 1];
             if (nextItem && nextItem.startMinutes === item.startMinutes) {
                 if (row) row.classList.remove('current-activity');
@@ -128,7 +118,6 @@ function updateApp() {
             
             if (curAct) curAct.textContent = item.activity;
             
-            // Bepaal de mooie weergave van de eindtijd
             let displayEndTime = item.startTime;
             for (let i = index + 1; i < betterSchedule.length; i++) {
                 if (betterSchedule[i].startMinutes > item.startMinutes) {
@@ -137,34 +126,19 @@ function updateApp() {
                 }
             }
             if (displayEndTime === item.startTime && index === betterSchedule.length - 1) {
-                displayEndTime = schedule[0].time; // Terug naar de ochtend
+                displayEndTime = schedule[0].time; 
             }
 
             if (curActFrom) curActFrom.textContent = item.startTime;
             if (curActTo) curActTo.textContent = displayEndTime;
             
             if (row) row.classList.add('current-activity');
-            activeFound = true; // Zorgt dat er geen andere rijen meer worden geactiveerd
+            activeFound = true; 
         } else {
             if (row) row.classList.remove('current-activity');
         }
     });
 }
-
-function switchView(viewId) {
-    document.querySelectorAll('.view').forEach(view => {
-        view.classList.add('hidden');
-    });
-    const targetView = document.getElementById(viewId);
-    if (targetView) targetView.classList.remove('hidden');
-    window.scrollTo(0, 0);
-}
-
-// Navigatie knoppen
-document.getElementById('btn-to-schedule')?.addEventListener('click', () => switchView('schedule-view'));
-document.getElementById('btn-to-game')?.addEventListener('click', () => switchView('game-view'));
-document.getElementById('btn-back-from-schedule')?.addEventListener('click', () => switchView('home-view'));
-document.getElementById('btn-back-from-game')?.addEventListener('click', () => switchView('home-view'));
 
 // Applicatie officieel opstarten
 createTable();
