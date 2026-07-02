@@ -3,8 +3,8 @@
     --text-main: #000000;
     --text-muted: #555555;
     --border-dark: #000000;
-    --border-light: #cccccc;
-    --highlight-bg: #e5e7eb; /* Strak grijs voor actieve rijen */
+    --highlight-bg: #e6f0fa; /* Subtiel blauw/lichtblauw zoals in je screenshot */
+    --highlight-border: #1a73e8; /* Blauwe accent-lijn aan de linkerkant */
 }
 
 body {
@@ -29,10 +29,6 @@ body {
     gap: 20px;
 }
 
-.hidden {
-    display: none !important;
-}
-
 .page-title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -42,40 +38,7 @@ body {
     padding-bottom: 8px;
 }
 
-.menu-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* Administratieve, strakke knoppen */
-.nav-button {
-    background: var(--bg-main);
-    color: var(--text-main);
-    border: 1px solid var(--border-dark);
-    padding: 15px;
-    font-size: 1rem;
-    font-weight: 700;
-    text-align: left;
-    cursor: pointer;
-}
-
-.nav-button:hover {
-    background: #f0f0f0;
-}
-
-.back-link {
-    background: none;
-    border: none;
-    color: var(--text-main);
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    padding: 0;
-    text-decoration: underline;
-}
-
-/* Panels */
+/* Live Info Panel bovenaan */
 .live-panel {
     border: 1px solid var(--border-dark);
     padding: 15px;
@@ -103,7 +66,7 @@ body {
     font-size: 1rem;
 }
 
-/* Tabellen (Zowel planning als scorebord) */
+/* De Planningstabel */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -112,7 +75,7 @@ table {
 
 th, td {
     border: 1px solid var(--border-dark);
-    padding: 10px 12px;
+    padding: 12px 14px;
     text-align: left;
     font-size: 0.95rem;
 }
@@ -130,22 +93,17 @@ th {
     font-weight: 700;
 }
 
-/* Highlight voor actieve rij planning & eigen team in stand */
+/* Highlight voor de rij die NU actief is */
 tr.current-activity {
-    background-color: var(--highlight-bg);
-    font-weight: 700;
+    background-color: var(--highlight-bg) !important;
+    color: var(--highlight-border); /* Tekstkleur blauw voor actieve rij */
 }
 
 tr.current-activity td {
-    border-top: 2px solid var(--border-dark);
-    border-bottom: 2px solid var(--border-dark);
+    font-weight: 700;
 }
 
-/* Feedback kleuren voor de antwoorden */
-.feedback-correct {
-    color: #2e7d32; /* Hard groen */
-}
-
-.feedback-wrong {
-    color: #c62828; /* Hard rood */
+/* Geeft de actieve rij die dikke blauwe indicatorrand aan de linkerkant */
+tr.current-activity td:first-child {
+    border-left: 4px solid var(--highlight-border);
 }
