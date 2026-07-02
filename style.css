@@ -3,8 +3,8 @@
     --text-main: #000000;
     --text-muted: #555555;
     --border-dark: #000000;
-    --highlight-bg: #e6f0fa; /* Subtiel blauw/lichtblauw zoals in je screenshot */
-    --highlight-border: #1a73e8; /* Blauwe accent-lijn aan de linkerkant */
+    --highlight-bg: #e6f0fa; /* Mooi lichtblauw uit je screenshot */
+    --highlight-border: #1a73e8; /* Helder blauw voor de tekst en rand indicator */
 }
 
 body {
@@ -96,14 +96,14 @@ th {
 /* Highlight voor de rij die NU actief is */
 tr.current-activity {
     background-color: var(--highlight-bg) !important;
-    color: var(--highlight-border); /* Tekstkleur blauw voor actieve rij */
+    color: var(--highlight-border); 
 }
 
 tr.current-activity td {
     font-weight: 700;
 }
 
-/* Geeft de actieve rij die dikke blauwe indicatorrand aan de linkerkant */
+/* Dikke blauwe indicatorrand aan de linkerkant */
 tr.current-activity td:first-child {
     border-left: 4px solid var(--highlight-border);
 }
