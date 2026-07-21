@@ -1,21 +1,23 @@
 // --- DAGPLANNING & KLOK LOGICA ---
 const schedule = [
-    { time: '8:15', activity: 'Opstaan' },
-    { time: '8:30', activity: 'Ochtendeten' },
-    { time: '9:15', activity: 'Lesmoment 1' },
-    { time: '10:45', activity: 'Pauze' },
+    { time: '7:45', activity: 'Niet vroeger douchen' },
+    { time: '8:25', activity: 'Wekken deelnemers' },
+    { time: '8:25', activity: 'Ontbijt & kameropruim' },
+    { time: '9:15', activity: 'Verzameling & Lesmoment 1' },
+    { time: '10:45', activity: 'Pauze, bar & inschrijven keuzeactiviteiten' },
     { time: '11:05', activity: 'Lesmoment 2' },
-    { time: '12:30', activity: 'Middageten - Vrije tijd' },
+    { time: '12:30', activity: 'Middageten & vrij' },
     { time: '13:45', activity: 'Lesmoment 3' },
-    { time: '15:15', activity: 'Pauze' },
-    { time: '15:20', activity: 'Namiddagactiviteit' },
-    { time: '17:45', activity: 'Vrije tijd' },
-    { time: '18:30', activity: 'Avondeten - Vrije tijd' },
-    { time: '19:45', activity: 'Avondactiviteit' },
-    { time: '21:30', activity: 'Vrije tijd - Bar' },
-    { time: '22:00', activity: 'Niet meer douchen' },
-    { time: '22:00', activity: 'Iedereen naar de kamers' },
-    { time: '22:30', activity: 'Lichten uit - Slapen' }
+    { time: '15:15', activity: 'Einde lessen & korte pauze' },
+    { time: '15:20', activity: 'Start keuzeactiviteiten' },
+    { time: '18:00', activity: 'Einde keuzeactiviteiten & vrije tijd' },
+    { time: '18:40', activity: 'Avondeten & vrije tijd' },
+    { time: '19:30', activity: 'Verzamelen voor avondanimatie' },
+    { time: '21:30', activity: 'Einde avondanimatie & bar' },
+    { time: '22:00', activity: 'Niet meer douchen / geen gsm' },
+    { time: '22:00', activity: 'Slapen gaan 1e graad' },
+    { time: '22:30', activity: 'Slapen gaan 2e graad' },
+    { time: '22:45', activity: 'Slapen gaan 3e graad' },
 ];
 
 let betterSchedule = [];
