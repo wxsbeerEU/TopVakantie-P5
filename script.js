@@ -32,7 +32,6 @@ schedule.forEach((item, index, array) => {
     const startMins = timeToMinutes(hour, minute);
     let endMins = startMins;
 
-    // Zoek naar de eerstvolgende activiteit die op een LATER tijdstip begint
     for (let i = index + 1; i < array.length; i++) {
         const [nextHour, nextMinute] = array[i].time.split(':').map(Number);
         const nextMins = timeToMinutes(nextHour, nextMinute);
@@ -42,7 +41,6 @@ schedule.forEach((item, index, array) => {
         }
     }
 
-    // Als er geen latere activiteit is gevonden, koppelen we deze aan de start van de volgende ochtend
     if (endMins === startMins) {
         const [firstHour, firstMinute] = array[0].time.split(':').map(Number);
         endMins = timeToMinutes(firstHour, firstMinute); 
@@ -106,7 +104,6 @@ function updateApp() {
         
         if (!activeFound && isCurrentActivity(currentMinutes, item.startMinutes, item.endMinutes)) {
             
-            // Fix voor de dubbele 22:00 -> geef prioriteit aan het laatste item op dat tijdstip
             const nextItem = betterSchedule[index + 1];
             if (nextItem && nextItem.startMinutes === item.startMinutes) {
                 if (row) row.classList.remove('current-activity');
@@ -141,7 +138,36 @@ function updateApp() {
     });
 }
 
-// Applicatie officieel opstarten
+// --- NAVIGATIE LOGICA ---
+function switchView(viewId) {
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active');
+    });
+    
+    const targetView = document.getElementById(viewId);
+    if (targetView) {
+        targetView.classList.add('active');
+    }
+}
+
+// Event Listeners voor navigatie
+document.getElementById('btn-dagplanning')?.addEventListener('click', () => {
+    switchView('schedule-view');
+});
+
+document.getElementById('btn-game')?.addEventListener('click', () => {
+    switchView('game-view');
+});
+
+document.getElementById('btn-back-schedule')?.addEventListener('click', () => {
+    switchView('main-menu');
+});
+
+document.getElementById('btn-back-game')?.addEventListener('click', () => {
+    switchView('main-menu');
+});
+
+// Applicatie opstarten
 createTable();
 updateApp();
 setInterval(updateApp, 1000);
