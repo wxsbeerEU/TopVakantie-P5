@@ -1,109 +1,98 @@
-:root {
-    --bg-main: #ffffff;
-    --text-main: #000000;
-    --text-muted: #555555;
-    --border-dark: #000000;
-    --highlight-bg: #e6f0fa; /* Mooi lichtblauw uit je screenshot */
-    --highlight-border: #1a73e8; /* Helder blauw voor de tekst en rand indicator */
-}
-
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-}
-
-.app-container {
-    width: 100%;
-    max-width: 600px;
-}
-
-/* Views & Structuur */
+/* --- VIEW MANAGEMENT & NAVIGATIE --- */
 .view {
-    display: flex;
+    display: none; /* Standaard verbergen we alle views */
     flex-direction: column;
     gap: 20px;
 }
 
-.page-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin: 0 0 10px 0;
+.view.active {
+    display: flex; /* Alleen de actieve view tonen */
+}
+
+.center-title {
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+/* Header met terugknop */
+.header-with-back {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     border-bottom: 2px solid var(--border-dark);
     padding-bottom: 8px;
 }
 
-/* Live Info Panel bovenaan */
-.live-panel {
-    border: 1px solid var(--border-dark);
-    padding: 15px;
-    background: #fafafa;
+.header-with-back .page-title {
+    border-bottom: none;
+    margin: 0;
+    padding: 0;
 }
 
-.panel-row {
-    margin-bottom: 8px;
-    font-size: 0.95rem;
-}
-
-.panel-row:last-child {
-    margin-bottom: 0;
-}
-
-.panel-label {
-    font-weight: 700;
-    color: var(--text-muted);
-    display: inline-block;
-    width: 160px;
-}
-
-.panel-value {
-    font-family: monospace;
-    font-size: 1rem;
-}
-
-/* De Planningstabel */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-th, td {
-    border: 1px solid var(--border-dark);
-    padding: 12px 14px;
-    text-align: left;
-    font-size: 0.95rem;
-}
-
-th {
+.btn-back {
     background: #f0f0f0;
+    border: 1px solid var(--border-dark);
+    padding: 6px 12px;
     font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+    border-radius: 4px;
 }
 
-.cell-time {
-    font-family: monospace;
-    width: 70px;
+.btn-back:hover {
+    background: #e0e0e0;
+}
+
+/* --- MENU GRID & BUTTONS --- */
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.menu-card {
+    background: #fafafa;
+    border: 2px solid var(--border-dark);
+    padding: 30px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.menu-card:hover {
+    background: var(--highlight-bg);
+    border-color: var(--highlight-border);
+}
+
+.menu-card:active {
+    transform: scale(0.98);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+}
+
+.card-title {
     font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-main);
 }
 
-/* Highlight voor de rij die NU actief is */
-tr.current-activity {
-    background-color: var(--highlight-bg) !important;
-    color: var(--highlight-border); 
-}
-
-tr.current-activity td {
+/* Placeholder voor de game */
+.placeholder-box {
+    border: 2px dashed var(--border-dark);
+    padding: 40px;
+    text-align: center;
     font-weight: 700;
-}
-
-/* Dikke blauwe indicatorrand aan de linkerkant */
-tr.current-activity td:first-child {
-    border-left: 4px solid var(--highlight-border);
+    background: #fafafa;
 }
