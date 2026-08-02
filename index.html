@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamp Dagplanning</title>
+    <title>P5 - TopVakantie</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,8 +13,30 @@
 <body>
     <div class="app-container">
         
+        <!-- HOOFDSCHERM / DASHBOARD -->
+        <section id="main-menu" class="view active">
+            <h1 class="page-title center-title">P5 - TopVakantie</h1>
+            <p class="subtitle">Maak je keuze:</p>
+            
+            <div class="menu-grid">
+                <button class="menu-card" id="btn-dagplanning">
+                    <span class="card-icon">📅</span>
+                    <span class="card-title">Dagplanning</span>
+                </button>
+                
+                <button class="menu-card" id="btn-game">
+                    <span class="card-icon">🎮</span>
+                    <span class="card-title">Kamp Game</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- DAGPLANNING SCHERM -->
         <section id="schedule-view" class="view">
-            <h1 class="page-title">Dagplanning</h1>
+            <div class="header-with-back">
+                <button class="btn-back" id="btn-back-schedule">← Menu</button>
+                <h1 class="page-title">Dagplanning</h1>
+            </div>
             
             <div class="live-panel">
                 <div class="panel-row">
@@ -41,6 +63,17 @@
                 <tbody>
                 </tbody>
             </table>
+        </section>
+
+        <!-- GAME SCHERM (PLACEHOLDER) -->
+        <section id="game-view" class="view">
+            <div class="header-with-back">
+                <button class="btn-back" id="btn-back-game">← Menu</button>
+                <h1 class="page-title">Kamp Game</h1>
+            </div>
+            <div class="placeholder-box">
+                <p>🎮 Hier komt binnenkort jouw kamp game!</p>
+            </div>
         </section>
 
     </div>
