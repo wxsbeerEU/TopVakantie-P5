@@ -1,12 +1,36 @@
+:root {
+    --bg-main: #ffffff;
+    --text-main: #000000;
+    --text-muted: #555555;
+    --border-dark: #000000;
+    --highlight-bg: #e6f0fa;
+    --highlight-border: #1a73e8;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 600px;
+}
+
 /* --- VIEW MANAGEMENT & NAVIGATIE --- */
 .view {
-    display: none; /* Standaard verbergen we alle views */
+    display: none;
     flex-direction: column;
     gap: 20px;
 }
 
 .view.active {
-    display: flex; /* Alleen de actieve view tonen */
+    display: flex;
 }
 
 .center-title {
@@ -18,6 +42,15 @@
     color: var(--text-muted);
     margin-top: -10px;
     margin-bottom: 15px;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+    border-bottom: 2px solid var(--border-dark);
+    padding-bottom: 8px;
 }
 
 /* Header met terugknop */
@@ -86,6 +119,76 @@
     font-weight: 700;
     font-size: 1.1rem;
     color: var(--text-main);
+}
+
+/* Live Info Panel bovenaan */
+.live-panel {
+    border: 1px solid var(--border-dark);
+    padding: 15px;
+    background: #fafafa;
+}
+
+.panel-row {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.panel-row:last-child {
+    margin-bottom: 0;
+}
+
+.panel-label {
+    font-weight: 700;
+    color: var(--text-muted);
+    display: inline-block;
+    width: 160px;
+}
+
+.panel-value {
+    font-family: monospace;
+    font-size: 1rem;
+}
+
+/* De Planningstabel */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid var(--border-dark);
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+th {
+    background: #f0f0f0;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.cell-time {
+    font-family: monospace;
+    width: 70px;
+    font-weight: 700;
+}
+
+/* Highlight voor de rij die NU actief is */
+tr.current-activity {
+    background-color: var(--highlight-bg) !important;
+    color: var(--highlight-border); 
+}
+
+tr.current-activity td {
+    font-weight: 700;
+}
+
+/* Dikke blauwe indicatorrand aan de linkerkant */
+tr.current-activity td:first-child {
+    border-left: 4px solid var(--highlight-border);
 }
 
 /* Placeholder voor de game */
